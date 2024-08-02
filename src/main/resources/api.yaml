@@ -1,0 +1,136 @@
+openapi: 3.0.3
+info:
+  title: Prices API
+  description: The Prices API supports the creation and management.
+  version: 6.0.0
+tags:
+  - name: prices
+#
+#servers:
+#  - url: /api
+
+paths:
+  /price:
+    get:
+      summary: Retrieve price by price id, start date and brand id.
+      operationId: findPrice
+      tags:
+        - prices
+      parameters:
+        - $ref: '#/components/parameters/priceRequest'
+      responses:
+        '200':
+          description: Return the group by Id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    PriceResponse:
+      type: object
+      properties:
+        productId:
+          type: string
+          example: "2"
+          description: Price id.
+        brandId:
+          type: string
+          example: "1"
+          description: Brand id.
+        priceList:
+          type: string
+          example: "1"
+          description: price id from a price list.
+        startDate:
+          type: string
+          description: start date to create price
+          example: "2020-06-14-00.00.00"
+        endDate:
+          type: string
+          description: start date to create price
+          example: "2020-06-15-00.00.00"
+        price:
+          type: string
+          example: 35.50
+          description: price of price.
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          example: AAAAAA555
+        message:
+          type: string
+          example: error message
+
+  parameters:
+    priceRequest:
+      name: priceRequest
+      in: query
+      description: Request filter params
+      schema:
+        type: object
+        properties:
+          productId:
+            type: string
+            example: "2"
+            description: Price id
+          brandId:
+            type: string
+            description: brand id
+            example: "1"
+          date:
+            type: string
+            description: date to request price
+            example: "2020-06-14-00.00.00"
+
+  responses:
+    PriceByParamsResponse:
+      description: PriceResponse
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PriceResponse'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotAuthorized:
+      description: Not authorized.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFound:
+      description: professional not found.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    InternalServerError:
+      description: Internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
